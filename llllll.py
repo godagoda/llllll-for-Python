@@ -14,7 +14,7 @@ def main():
         selected_d = raw_input(w)
 
     selected_t = 0
-    t = map( lambda x: re.sub(" .+?$", "", x), task_affinities(d[int(selected_d)]))
+    t = map(lambda x: re.sub(" .+?$", "", x), task_affinities(d[int(selected_d)]))
     if len(t) > 1:
         print("")
         w = "Please select taskAffinity [0-%d]\n" % (len(t) - 1)
@@ -25,16 +25,18 @@ def main():
 
     hist_number = 1;
     print("")
-    print("#" * 50)
+    print("#" * 80)
     print("## taskAffinity=" + t[int(selected_t)])
-    print("#" * 50)
+    print("#" * 80)
     selected_t_name = t[int(selected_t)]
     for acticity_hist in reversed(activity_hists(d[int(selected_d)])):
         if acticity_hist[2].split("=")[1] == selected_t_name:
             print("")
             print("Hist #" + str(hist_number))
-            for val in acticity_hist:
-                print val
+            print(acticity_hist[3]) #realActivity
+            print(acticity_hist[4]) #state
+            print(acticity_hist[0]) #processName
+            print(acticity_hist[1]) #Intent
             hist_number = hist_number + 1
     print("")
 
@@ -58,7 +60,6 @@ def task_affinities(device_id):
 def activity_hists(device_id):
     """
     """
-    #* Hist #4: HistoryRecord{2b00abb0 com.android.settings/.ManageApplications}
     pattern = re.compile("\* Hist #\d+: (?:ActivityRecord|HistoryRecord){.+?}.*?(processName=.+?)\s.*?(Intent {.+?})\s.*?(taskAffinity=.+?)\s.*?(realActivity=.*?)\s.*?(state=(?:RESUMED|PAUSED|STOPPED|DESTROYED|PAUSING|STOPPING|FINISHING|DESTROYING|INITIALIZING))\s.*?(finishing=(?:true|false))\s.*?(visible=(?:true|false))\s", re.MULTILINE | re.DOTALL)
     return pattern.findall(adb_dump_sys_activity(device_id))
 
