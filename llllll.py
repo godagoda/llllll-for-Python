@@ -37,7 +37,7 @@ def main():
             print(acticity_hist[4]) #state
             print(acticity_hist[0]) #processName
             print(acticity_hist[1]) #Intent
-            hist_number = hist_number + 1
+            hist_number += 1
     print("")
 
 def adb_version(device_id):
