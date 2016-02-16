@@ -4,6 +4,12 @@ import sys, os, re
 from subprocess import *
 
 def main():
+    has_peco = True;
+    try:
+        check_call('which peco', shell=True)
+    except CalledProcessError, e:
+        has_peco = False
+
     selected_d = 0
     d = devices()
     if len(d) > 1:
