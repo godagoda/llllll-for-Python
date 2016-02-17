@@ -19,22 +19,21 @@ def main():
         w += "> "
         selected_d = raw_input(w)
 
-    selected_t = 0
+
     t = map(lambda x: re.sub(" .+?$", "", x), task_affinities(d[int(selected_d)]))
+    selected_t_name = t[0]
     if len(t) > 1:
-        print("")
-        w = "Please select taskAffinity [0-%d]\n" % (len(t) - 1)
-        for i, v in enumerate(t):
-            w += str(i) + "::" + v +"\n"
-        w += "> "
-        selected_t = raw_input(w)
+        w = ""
+        for v in t:
+            w += v +"\n"
+        p = Popen(['peco'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+        selected_t_name = p.communicate(input=w)[0].strip()
 
     hist_number = 1;
     print("")
     print("#" * 80)
-    print("## taskAffinity=" + t[int(selected_t)])
+    print("## taskAffinity=" + selected_t_name)
     print("#" * 80)
-    selected_t_name = t[int(selected_t)]
     for acticity_hist in reversed(activity_hists(d[int(selected_d)])):
         if acticity_hist[2].split("=")[1] == selected_t_name:
             print("")
