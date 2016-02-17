@@ -10,20 +10,19 @@ def main():
     except CalledProcessError, e:
         has_peco = False
 
-    selected_d = 0
     d = devices()
+    selected_d = d[0]
     if len(d) > 1:
-        w = "Please select device [0-%d]\n" % (len(d) - 1)
-        for i, v in enumerate(d):
-            w += str(i) + "::" + v +"\n"
-        w += "> "
-        selected_d = raw_input(w)
+        w = "List of devices attached\n"
+        for v in d:
+            w += v +"\n"
+        p = Popen(['peco'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+        selected_d = p.communicate(input=w)[0].strip()
 
-
-    t = map(lambda x: re.sub(" .+?$", "", x), task_affinities(d[int(selected_d)]))
+    t = map(lambda x: re.sub(" .+?$", "", x), task_affinities(selected_d))
     selected_t_name = t[0]
     if len(t) > 1:
-        w = ""
+        w = "List of task affinities\n"
         for v in t:
             w += v +"\n"
         p = Popen(['peco'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
@@ -31,10 +30,10 @@ def main():
 
     hist_number = 1;
     print("")
-    print("#" * 80)
+    print("#" * 100)
     print("## taskAffinity=" + selected_t_name)
-    print("#" * 80)
-    for acticity_hist in reversed(activity_hists(d[int(selected_d)])):
+    print("#" * 100)
+    for acticity_hist in reversed(activity_hists(selected_d)):
         if acticity_hist[2].split("=")[1] == selected_t_name:
             print("")
             print("Hist #" + str(hist_number))
